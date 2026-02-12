@@ -1,6 +1,7 @@
 import os
 import logging
 import datetime
+import socket
 
 # Configuration du logging
 logging.basicConfig(
@@ -33,5 +34,22 @@ def verifier_charge_cpu():
     return charge
 
 
+def verifier_port(hote, port):
+    logging.info(f"Test du port {port} sur {hote}")
+
+    s = socket.socket()
+    s.settimeout(2)
+
+    try:
+        s.connect((hote, port))
+        logging.info("Port ouvert")
+        return True
+    except:
+        logging.warning("Port fermé ou inaccessible")
+        return False
+    finally:
+        s.close()
 if __name__ == "__main__":
     verifier_connectivite("127.0.0.1")
+    verifier_port("127.0.0.1", 5000)
+    verifier_charge_cpu()
